@@ -38,3 +38,13 @@ alumno['nacionalidad'] = 'Boliviano'
 # alumno.get('nacionalidad') = 'Boliviano'
 
 alumnos = ({'nombre':'juancito'},{'nombre':'martita'}, {'nombre':'robertito'})
+
+
+# 1. Quiero saber los hobbies del alumno
+print(alumno['hobbies'])
+
+# 2. Quiero saber el segundo hobbie del alumno (pos 1)
+print(alumno['hobbies'][1])
+
+# 3. Quiero saber el nombre del padre el alumno
+print(alumno['padres']['padre']['nombre'])
