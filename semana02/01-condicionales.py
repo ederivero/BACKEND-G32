@@ -21,3 +21,49 @@ if numero > 0:
     print("Es positivo")
 else:
     print("Es negativo")
+
+
+# Se necesita registrar la venta por teclado y si la venta es mayor o igual a 100 soles entonces agregar un descuento del 10%, caso contrario no agregar descuento y luego mostrar cuanto debe de pagar.
+venta = float(input("Ingrese el monto: "))
+monto_a_pagar = 0
+if venta >= 100:
+    monto_a_pagar = venta * 0.9
+    # es lo mismo que esto
+    # descuento = 0.10
+    # monto = venta - venta * descuento
+else:
+    monto_a_pagar = venta
+
+print(f"El monto a pagar es: {monto_a_pagar}")
+
+# OPERADOR TERNARIO
+# se usa si en el if-else solo vamos a tener una sola linea de codigo
+
+# variable =  RESULTADO_SI_ES_VERDADERA if CONDICION else RESULTADO_SI_NO_ES_VERDADERA
+monto_a_pagar = venta * 0.9 if venta >= 100 else venta
+print(f"El monto a pagar es: {monto_a_pagar}")
+
+# ESTO ES EN JAVASCRIPT: CONDICION ? RESULTADO_SI_ES_VERDADERA : RESULTADO_SI_NO_ES_VERDADERA 
+
+
+# Usando el operador ternario indiqueme si el numero es "Par" o "Impar"
+numero = 11
+#    RESULTADO_SI_SE_CUMPLE if CONDICION       else RESULTADO_SI_NO_SE_CUMPLE
+resultado = "Par"           if numero % 2 == 0 else "Impar"
+
+print(f"El numero {numero} es {resultado}")
+
+
+# if anidados
+# si su nota es entre 90 y 100 es excelente, si su nota es entre 70 y 90 es bueno, si su nota es entre 50 y 70 es regular y si es menor que 50 es malo
+nota = 15
+
+if nota >= 90 and nota <= 100:
+    print("Es excelente")
+# si no, entonces si… | sino pero si cumple la condicion
+elif nota >= 70:
+    print("Es bueno")
+elif nota >= 50:
+    print("Es regular")
+else:
+    print("Es malo")
