@@ -80,3 +80,7 @@ for mes, monto in ventas:
     ventas_dic[mes] = monto
 
 print(ventas_dic)
+
+# .items() devuelve los elementos del diccionario en una tupla en la cual la primera posicion es la llave y la segunda es el valor y por ende se hace una destructuracion
+for llave,valor in ventas_dic.items():
+    print(f"{llave}:{valor}")
