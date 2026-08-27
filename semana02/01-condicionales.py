@@ -67,3 +67,57 @@ elif nota >= 50:
     print("Es regular")
 else:
     print("Es malo")
+
+
+nacionalidad = ""
+
+if nacionalidad == "PERUANO":
+    print("Que rico es el ceviche")
+elif nacionalidad == "BOLIVIANO":
+    print("Que rico es la salteña")
+elif nacionalidad == "COLOMBIANO":
+    print("Que rico es la bandeja paisa")
+
+
+# PARA CUANDO TE HACEN VARIAS CONDICIONES
+# SWITCH - CASE 
+
+# En base al numero del dia de la semana si es 1, es lunes, si es 2, es martes, si es 3 , es miercoles y asi sucesivamente
+numero = 1
+dia = "" 
+if numero == 1:
+    dia = "Lunes"
+elif numero == 2:
+    dia = "Martes"
+elif numero == 3:
+    dia = "Miercoles"
+# ...
+
+
+# Crear una calculadora simple en la cual vamos a ingresar el numero1 , operacion que puede ser "+" (Suma), "-" (Resta), "*" (Multiplicacion), "/" (Division), numero2, retornar el resultado
+# Utilizar if y elif para la operacion, asi mismo, si se ingresa una operacion diferente retornar un mensaje que diga "INCORRECTO"
+
+numero1 = int(input("Ingrese el primer numero: "))
+numero2 = int(input("Ingrese el segundo numero: "))
+operacion  = input("Ingrese la operacion: ")
+
+resultado = ''
+
+if operacion == "+":
+    resultado = numero1 + numero2
+
+elif operacion == "-":
+    resultado = numero1 - numero2
+
+elif operacion == "*":
+    resultado = numero1 * numero2
+
+elif operacion == "/":
+    if numero2 == 0:
+        resultado = "No se puede dividir entre 0"
+    else:
+        resultado = numero1 / numero2
+else:
+    resultado = "INCORRECTO"
+
+print(resultado)
