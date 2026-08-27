@@ -27,3 +27,12 @@ while contador < 10:
     print(contador)
 
 
+
+print ('--------')
+# En el while se puede agregar un else y se ingresara cuando el while termine
+numero = 5 
+while numero > 0:
+    print(numero)
+    numero -= 1
+else:
+    print("ACABOOOO")

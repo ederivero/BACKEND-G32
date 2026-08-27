@@ -24,6 +24,16 @@ while True:
     print("BUUUUU!!")
 
 
-# Ingresar 5 precio a la lista y si se ingresa un valor negativo o 0 no se debe de tomar en consideracion
+# Ingresar 5 precios a la lista y si se ingresa un valor negativo o 0 no se debe de tomar en consideracion
 lista_precios = []
 # NO USAR BREAK, SOLO CONTINUE
+while len(lista_precios) < 5:
+    precio = int(input("Ingresa el precio: "))
+
+    if precio <= 0:
+        print("El precio no puede ser negativo")
+        continue
+    lista_precios.append(precio)
+
+print("Gracias por ingresar los precios")
+print(lista_precios)
