@@ -36,5 +36,22 @@ def saludo_personalizado(nombre: str):
     # DOCUMENTACION DE LAS FUNCIONES
     return f"Bienvenido {nombre}"
 
-
 print(saludo_personalizado("EDUARDO"))
+
+def presentacion(nombre:str, edad:int, ciudad:str):
+    return f"Hola me llamo {nombre}, tengo {edad} años y soy de {ciudad}"
+
+# El orden que le pongamos a los parametros IMPORTA
+print(presentacion("Juan", 23, "Tarapoto"))
+print(presentacion("Roxana", 29, "Jaen"))
+print(presentacion("Eduardo", 36, "Omate"))
+
+# Si queremos modificar el orden de los parametros
+print(presentacion(ciudad="Trujillo", nombre="Victor", edad=21))
+
+def sumar(num1,num2):
+    # Si en una funcion se manda a llamar al print pero no se retorna nada, se imprimira en la terminal pero no habra nada que retornar
+    print(num1 + num2)
+
+resultado = sumar(10,5)
+print(resultado)
