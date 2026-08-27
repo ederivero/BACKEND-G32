@@ -118,7 +118,8 @@ print('------------')
 # Se necesita buscar en la lista de productos el stock de determinado producto, si no lo encuentra indicar que el producto no existe
 def mostrar_stock_producto(nombre):
     for producto in productos:
-        if producto.get("nombre") == nombre:
+        # al momento de buscar convirtamos los valores del diccionario como el valor a buscar todo a minuscula
+        if producto.get("nombre").lower() == nombre.lower():
             return f"Hay {producto.get("stock")} unidades"
          
     return "El producto no existe"
