@@ -1,0 +1,5 @@
+# 1. Crear una clase Producto en el cual su constructor reciba el nombre, precio, stock. Agregar un metodo esta_disponible en el cual muestre True si lo esta o no.
+
+# 2. Crear una clase CarritoCompras en la cual en el constructor reciba el cliente y que inicialice una lista vacia de productos. Asi mismo, tener los metodos agregar_producto(nombre, precio), y cada producto se debe de guardar en un diccionario {"nombre":nombre, "precio":precio} a la lista. Y otro metodo llamado calcular_total en el cual recorrera la lista de productos y me dara el precio a pagar. Y un metodo llamado limpiar_carrito en el cual limpiara todos los productos de la lista
+
+# 3. Crear una clase Sesion (simular el login y logout)  en la cual en el constructor recibamos un usuario y un atributo que sea activa = False. Agregar el metodo iniciar_sesion que cambia activa = True y cerrar_sesion cambia activa = False y un metodo verificar_acceso que imprima "Acceso Permitido" si activa = True o "Acceso Denegado" si activa = False
