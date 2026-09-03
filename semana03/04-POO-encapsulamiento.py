@@ -104,3 +104,29 @@ emp1.mostrar_boleta()
 
 # Crear una clase Caja que simule una caja registradora
 # Un atributo privado __total que inicia en 0, y un metodo privado __validar_monto(monto) que retorne True si el monto es mayor que 0 y False si no lo es. Asi mismo , otro metodo agregar_venta(monto) que primero valide el monto y si es valido lo incremente a total y muestre un mensaje de confirmacion, si no es valido, mostrar un mensaje de error y no modificar el total. Y un metodo mostrar_total() que imprima lo acumulado en caja
+class Caja:
+    # Si el constructor no tiene parametros los atributos se pueden definir en la raiz de la clase
+    __total = 0
+
+    # def __init__(self):
+    #     self.__total = 0
+
+    def __validar_monto(self, monto):
+        return monto > 0
+
+    def agregar_venta(self, monto):
+        es_valido = self.__validar_monto(monto)
+        if es_valido:
+            self.__total += monto
+            print("Monto agregado")
+        else:
+            print("Error al ingresar monto negativo")
+
+    def mostrar_total(self):
+        print(f"En caja hay {self.__total}")
+
+venta = Caja()
+venta.agregar_venta(100)
+venta.agregar_venta(20)
+venta.agregar_venta(-5)
+venta.mostrar_total()
