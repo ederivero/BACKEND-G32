@@ -54,3 +54,53 @@ print(p1.apellido)
 
 
 # Crear una clase Usuario en el cual tengamos el nombre, correo, password. El password debe ser un atributo privado y solamente en el constructor inicializar el nombre y correo. Cuando se quiera modificar el password usar el @property y no permitir el ingreso de un string que tenga espacios o sea menor que 8 caracteres, y asi mismo cuando se quiera obtener el password devolver *******
+class Usuario:
+    def __init__(self, nombre, correo):
+        self.nombre = nombre
+        self.correo = correo
+        self.__password = None
+
+    @property
+    def password(self):
+        return "*******" if self.__password else "Ingresa una password" 
+
+    @password.setter
+    def password(self, nueva_password):
+        if " " in nueva_password or len(nueva_password) < 8:
+            print("Password invalida, no puede tener espacios ni menor que 8 caracteres")
+        self.__password = nueva_password
+
+usuario1 = Usuario("Pedro", "pc1@gmail.com")
+print(usuario1.password)
+usuario1.password = "aeiou"
+usuario1.password = "123456789"
+print(usuario1.password)
+
+
+class Empleado: 
+    def __init__(self, nombre, sueldo_base, horas_extras):
+        self.nombre = nombre
+        self.__sueldo_base = sueldo_base
+        self.__horas_extras = horas_extras
+
+    def __calcular_pago_extra(self):
+        valor_hora_extra = 20
+        return self.__horas_extras * valor_hora_extra
+
+    def calcular_sueldo_total(self):
+        monto_extra = self.__calcular_pago_extra()
+        return self.__sueldo_base + monto_extra
+
+    def mostrar_boleta(self):
+        print(f"""Empleado: {self.nombre}
+Sueldo base: {self.__sueldo_base}
+Pago extra: {self.__calcular_pago_extra()}
+Total: {self.calcular_sueldo_total()}""")
+
+emp1 = Empleado("Juanito",2000, 15)
+# emp1.__calcular_pago_extra() # No se puede acceder a los metodos privados
+emp1.mostrar_boleta()
+
+
+# Crear una clase Caja que simule una caja registradora
+# Un atributo privado __total que inicia en 0, y un metodo privado __validar_monto(monto) que retorne True si el monto es mayor que 0 y False si no lo es. Asi mismo , otro metodo agregar_venta(monto) que primero valide el monto y si es valido lo incremente a total y muestre un mensaje de confirmacion, si no es valido, mostrar un mensaje de error y no modificar el total. Y un metodo mostrar_total() que imprima lo acumulado en caja
