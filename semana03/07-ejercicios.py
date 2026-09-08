@@ -144,6 +144,7 @@ productos[0].precio = -1
 
 for producto in productos:
 	producto.precio = 500
+	producto.calcular_precio_final()
 
 
 productos[0].vender(10) # Imprimir venta invalida
