@@ -17,7 +17,7 @@
 -- Al tener una relacion de muchos a muchos la FK no puede existir en alguna de las tablas y por ende se crea
 -- una tabla Intermedia, Pivote, Puente en la cual en esa tablan iran las FK de las dos tablas (fk_alumno, fk_curso)
 
-					CREATE DATABASE directorio;
+CREATE DATABASE directorio;
 
 CREATE TABLE usuarios (
 	id SERIAL PRIMARY KEY,
