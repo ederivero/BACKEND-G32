@@ -1,0 +1,172 @@
+EJERCICIO 1
+Solicita por teclado un numero que representa una cantidad total
+de segundos. Calcula cuantas horas, minutos y segundos representa
+(usando los operadores // y %) e imprime el resultado con un
+f-string. Ejemplo: "3746 segundos equivalen a 1 horas, 2 minutos
+y 26 segundos".
+
+EJERCICIO 2
+Dada la siguiente lista de precios:
+precios = [12.5, 8.9, 25.0, 3.75, 40.2]
+Usando un bucle for, calcula e imprime:
+a) La suma total de los precios.
+b) El promedio de los precios (con 2 decimales).
+
+EJERCICIO 3
+Dado el siguiente diccionario:
+
+curso = {
+"nombre": "Backend con Python",
+"duracion_semanas": 12,
+"estudiantes": ["Ana", "Luis", "Carla", "Pedro"],
+"profesor": {
+"nombre": "Eduardo",
+"ciudad": "Arequipa"
+}
+}
+
+Escribe el codigo necesario para imprimir:
+a) El nombre del curso.
+b) El segundo estudiante de la lista (posicion 1).
+c) La ciudad del profesor.
+d) La cantidad total de estudiantes (usando len()).
+
+EJERCICIO 4
+Crea una funcion llamada clasificar_nota(nota) que reciba una nota
+del 0 al 20 y retorne (usando if-elif-else):
+
+* "Excelente" si la nota es entre 17 y 20
+* "Bueno" si la nota es entre 14 y 16
+* "Regular" si la nota es entre 11 y 13
+* "Desaprobado" si la nota es menor a 11
+Luego, prueba la funcion con al menos 4 notas diferentes e imprime
+los resultados.
+
+EJERCICIO 5
+Crea una funcion llamada calcular_promedio(*notas) que reciba una
+cantidad indeterminada de notas (usando *args), calcule el
+promedio y luego llame internamente a la funcion clasificar_nota
+del ejercicio anterior para mostrar el resultado final en pantalla
+con un mensaje como: "El promedio es 15.5 y la clasificacion es
+Bueno".
+
+EJERCICIO 6
+Crea un programa que simule un cajero automatico simple usando un
+bucle while:
+
+* La clave correcta es "2024".
+* El usuario tiene un maximo de 3 intentos.
+* Si acierta, debe mostrar "Acceso concedido" y terminar el bucle
+(usa break).
+* Si falla los 3 intentos, debe mostrar "Cuenta bloqueada".
+* Usa try-except para capturar el caso en que el usuario ingrese
+texto en lugar de numeros, si tu programa espera un numero en
+algun momento (opcional, pero valorado como plus).
+
+EJERCICIO 7
+
+Se necesita construir un pequeño sistema para gestionar el pago de
+distintos tipos de empleados de una empresa.
+
+REQUERIMIENTOS:
+
+1. (1.5 puntos) Crea una clase base llamada Empleado con:
+* Atributos: nombre (publico) y sueldo_base (debe ser un
+atributo PRIVADO, es decir, con doble guion bajo).
+* Un getter y un setter para sueldo_base usando el decorador
+@property. El setter NO debe permitir que se asigne un
+sueldo_base negativo (si se intenta, mostrar un mensaje de
+error y no modificar el valor).
+* Un metodo calcular_sueldo() que por defecto retorne el
+sueldo_base.
+* Un metodo mostrar_info() que imprima el nombre y el resultado
+de calcular_sueldo().
+
+
+2. (1.5 puntos) Crea una clase EmpleadoVentas que herede de
+Empleado y agregue un atributo comision. Debe sobreescribir el
+metodo calcular_sueldo() para que retorne sueldo_base +
+comision. Usa super() en el constructor.
+3. (1.5 puntos) Crea una clase EmpleadoTiempoParcial que herede de
+Empleado y tenga los atributos horas_trabajadas y
+pago_por_hora. Debe sobreescribir calcular_sueldo() para que
+retorne horas_trabajadas * pago_por_hora (en este caso se
+ignora el sueldo_base). Usa super() en el constructor.
+4. (0.5 puntos) Crea una lista con al menos un objeto de cada una
+de las 3 clases (Empleado, EmpleadoVentas y
+EmpleadoTiempoParcial). Recorre la lista con un for llamando a
+mostrar_info() en cada uno (esto demuestra el POLIMORFISMO, ya
+que cada clase calcula su sueldo de forma distinta con el mismo
+nombre de metodo).
+5. (Sin puntaje adicional, pero obligatorio) Al final del for,
+suma el resultado de calcular_sueldo() de cada empleado en una
+variable llamada planilla_total e imprime el total con 2
+decimales.
+
+EJERCICIO 8
+
+Se necesita modelar una pequeña base de datos para una biblioteca.
+
+EJERCICIO 8.1 - DDL (1.5 puntos)
+Escribe las sentencias SQL necesarias para:
+a) Crear una base de datos llamada biblioteca.
+b) Crear una tabla llamada libros con las siguientes columnas:
+
+* id: autoincrementable, llave primaria.
+* titulo: texto, no nulo.
+* autor: texto de hasta 50 caracteres.
+* precio: numero decimal.
+* stock: numero entero.
+* disponible: booleano, con valor por defecto TRUE.
+c) Crear una tabla llamada usuarios con:
+* id: autoincrementable, llave primaria.
+* nombre: texto.
+* correo: texto, unico (UNIQUE).
+
+EJERCICIO 8.2 - DML e INSERT (1 punto)
+Escribe las sentencias SQL para insertar al menos 4 registros
+(libros) en la tabla libros, variando sus categorias/valores de
+precio y stock (algunos con stock 0, otros con stock disponible).
+
+EJERCICIO 8.3 - SELECT y filtros (1.5 puntos)
+Utilizando la tabla libros del ejercicio anterior, escribe las
+consultas SQL para:
+a) Mostrar todos los libros cuyo precio este entre 20 y 60.
+b) Mostrar todos los libros cuyo titulo contenga la palabra
+"Python" (sin distinguir mayusculas de minusculas).
+c) Mostrar los libros que no tengan stock (stock = 0).
+d) Mostrar el titulo y autor de los libros, pero renombrando las
+columnas de salida como "nombre_libro" y "escritor".
+
+EJERCICIO 8.4 - Funciones de agregacion y relaciones (1 punto)
+a) Escribe una consulta que muestre, por cada autor, la cantidad
+total de libros que tiene registrados (usa COUNT y GROUP BY).
+b) Escribe la sentencia SQL para crear una tabla intermedia
+llamada prestamos que relacione la tabla usuarios con la tabla
+libros (relacion muchos a muchos), incluyendo las llaves
+foraneas correspondientes (usuario_id y libro_id) tal como se
+trabajo en clase con la tabla alumnos_cursos.
+
+EJERCICIO 8.5 - JOIN, LEFT JOIN, RIGHT JOIN (2 puntos)
+Usando la tabla prestamos creada en el ejercicio anterior
+(prestamos, con las columnas usuario_id y libro_id) junto con las
+tablas usuarios y libros, escribe las siguientes consultas SQL:
+
+a) Usando JOIN (INNER JOIN), muestra el nombre del usuario junto
+con el titulo del libro, solo para los prestamos que
+efectivamente existen (usuarios que si tienen algun libro
+prestado).
+
+b) Usando LEFT JOIN, muestra el nombre de TODOS los usuarios junto
+con el titulo del libro que tienen prestado (si un usuario no
+tiene ningun prestamo, el titulo debe aparecer como NULL).
+
+c) Usando RIGHT JOIN, muestra el titulo de TODOS los libros junto
+con el nombre del usuario que los tiene prestados (si un libro
+nunca fue prestado, el nombre del usuario debe aparecer como
+NULL).
+
+d) Usando JOIN entre las 3 tablas y una funcion de agregacion,
+escribe una consulta que muestre, por cada usuario, la
+cantidad de libros que tiene actualmente en prestamo (usa
+COUNT y GROUP BY sobre el nombre del usuario).

@@ -1,0 +1,123 @@
+====================================================================
+EJERCICIO 1
+====================================================================
+Crea un programa en Python que:
+ 
+a) Solicite por teclado el precio de un producto (usar input()) y lo convierta a numero decimal (float).
+b) Si el precio es mayor o igual a 50, aplique un descuento del 15%; si no, no aplique descuento.
+c) Imprima el precio final usando f-strings, con 2 decimales. Ejemplo de salida: "El precio final es: 42.50"
+ 
+Adicionalmente, dada la siguiente lista de precios:
+precios = [12.5, 8.9, 25.0, 3.75, 40.2]
+ 
+d) Usando un bucle for, calcula e imprime la suma total y el promedio de los precios (el promedio con 2 decimales).
+ 
+====================================================================
+EJERCICIO 2
+====================================================================
+Dada la siguiente lista de diccionarios:
+ 
+productos = [
+    {"nombre": "Cuaderno", "precio": 4.5, "stock": 20},
+    {"nombre": "Lapicero", "precio": 1.2, "stock": 0},
+    {"nombre": "Mochila", "precio": 85.0, "stock": 5}
+]
+ 
+a) Crea una funcion llamada mostrar_disponibilidad(productos) que recorra la lista con un for y, por cada producto, imprima:
+   - "PRODUCTO tiene stock disponible" si el stock es mayor a 0
+   - "PRODUCTO no tiene stock" si el stock es igual a 0
+   (reemplaza PRODUCTO por el nombre real de cada producto)
+ 
+b) Crea una función llamada clasificar_nota(nota) que reciba una nota del 0 al 20 y retorne (usando if-elif-else):
+   - "Excelente" si la nota es entre 17 y 20
+   - "Bueno" si la nota es entre 14 y 16
+   - "Regular" si la nota es entre 11 y 13
+   - "Desaprobado" si la nota es menor a 11
+   Prueba la funcion con al menos 3 notas diferentes e imprime los
+   resultados.
+ 
+====================================================================
+EJERCICIO 3
+====================================================================
+a) Crea una clase llamada Libro que en su constructor (__init__) reciba: titulo, autor y paginas. Agrega un metodo llamado resumen() que imprima algo como:
+   "El libro TITULO fue escrito por AUTOR y tiene PAGINAS paginas"
+   Luego crea una instancia de la clase y llama al método
+   resumen().
+ 
+b) Crea una clase llamada CuentaBancaria con:
+   - Atributos: titular (publico) y saldo (debe ser un atributo
+     PRIVADO, es decir, con doble guion bajo).
+   - Un getter para saldo usando el decorador @property.
+   - Un metodo depositar(monto) que aumente el saldo solo si el
+     monto es mayor a 0 (si no, mostrar un mensaje de error).
+   - Un metodo retirar(monto) que reste el saldo solo si hay
+     saldo suficiente (si no, mostrar un mensaje de error).
+   Crea una instancia y prueba los métodos con al menos 2
+   depositos y 2 retiros (uno de ellos debe fallar a proposito
+   para comprobar la validacion).
+ 
+====================================================================
+EJERCICIO 4
+====================================================================
+Usando como referencia la siguiente tabla trabajada en clase:
+ 
+CREATE TABLE productos (
+    id SERIAL PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    categoria VARCHAR(30),
+    precio FLOAT,
+    stock INT,
+    activo BOOLEAN DEFAULT TRUE
+);
+ 
+Escribe las siguientes sentencias SQL:
+ 
+a) Inserta un producto llamado 'Cuaderno A4', categoria 'Utiles', precio 3.50, stock 100 y activo TRUE.
+ 
+b) Muestra todos los productos cuyo precio sea mayor a 10 y que esten activos.
+ 
+c) Muestra todos los productos cuyo nombre contenga la palabra "leche" (sin distinguir mayusculas de minusculas).
+ 
+d) Escribe una consulta que muestre, por cada categoria, la suma total del stock (usa SUM y GROUP BY), mostrando solo las categorias cuya suma de stock sea mayor a 20 (usa HAVING).
+
+
+=====================================================================
+EJERCICIO 5 
+====================================================================
+Se tienen las siguientes tablas (relacion muchos a muchos, tal como se trabajo en clase con alumnos, cursos y la tabla puente alumnos_cursos):
+ 
+CREATE TABLE alumnos (
+    id SERIAL PRIMARY KEY,
+    nombre TEXT
+);
+ 
+CREATE TABLE cursos (
+    id SERIAL PRIMARY KEY,
+    nombre TEXT
+);
+ 
+CREATE TABLE alumnos_cursos (
+    alumno_id INT,
+    curso_id INT,
+    nota FLOAT,
+    CONSTRAINT fk_alumno FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
+    CONSTRAINT fk_curso FOREIGN KEY (curso_id) REFERENCES cursos(id),
+    PRIMARY KEY (alumno_id, curso_id)
+);
+ 
+Considera que puede haber alumnos que aun no se han matriculado en ningún curso, y cursos que todavía no tienen ningún alumno matriculado.
+ 
+Escribe las siguientes consultas SQL:
+ 
+a) Usando JOIN (INNER JOIN), muestra el nombre del alumno junto con el nombre del curso y la nota, solo para los alumnos que si estan matriculados en algun curso.
+ 
+b) Usando LEFT JOIN, muestra el nombre de TODOS los alumnos junto con el nombre del curso en el que están matriculados (si un alumno no tiene curso, el nombre del curso debe aparecer como NULL).
+ 
+c) Usando RIGHT JOIN, muestra el nombre de TODOS los cursos junto con el nombre de los alumnos matriculados en cada uno (si un curso no tiene alumnos, el nombre del alumno debe aparecer como NULL).
+ 
+d) Usando el JOIN entre las 3 tablas, escribe una consulta que muestre, por cada curso, el promedio de las notas de los alumnos matriculados (usa AVG y GROUP BY sobre el nombre del curso).
+
+
+==============================================================
+
+AL FINALIZAR LA EVALUACION ENVIAR UN ARCHIVO COMPRIMIDO (ZIP , RAR) CON CADA UNO DE LOS EJERCICIOS EN UN ARCHIVO APARTE, ES DECIR, 01.py, 02.py, 03.py, 04.sql, 05.sql
