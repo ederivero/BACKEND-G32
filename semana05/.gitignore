@@ -1,0 +1,10 @@
+# es un archivo que indica a git que archivos debe ignorar , es decir al momento de hacer commit no los tome en consideracion, se puede utilizar patrones
+# https://git-scm.com/docs/gitignore
+.env
+
+# el * sirve para prescindir del nombre o extencion
+*.pdf
+ayuda.*
+
+# si no se pone extension, sera considerado carpeta y tbn se puede ignorar carpetas
+mi_carpeta

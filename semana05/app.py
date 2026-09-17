@@ -1,9 +1,15 @@
 # from LIBRERIA import CLASES, FUNCIONES que queremos usar de la libreria
 from flask import Flask, request
 from werkzeug.exceptions import UnsupportedMediaType
+from dotenv import load_dotenv
+from os import environ # devolvera todas las variables de entorno de la maquina y aqui se agregaran las variables del archivo .env
+
+# el load_dotenv SIEMPRE debe ir en la primera linea del proyecto para que cargue todas las variables en todo el proyecto y evitar alguna variable no leida
+load_dotenv()
+
 # PARA MSSQL
 from mssql_python import connect as conector_mssql
-connection_str = "Server=localhost,1433;Database=<database_name>;UID=<username>;PWD=<password>;Encrypt=yes;TrustServerCertificate=yes"
+connection_str = environ.get("DATABASE_URL")
 
 # conexion_mssql = conector_mssql(connection_str)
 
@@ -13,7 +19,7 @@ connection_str = "Server=localhost,1433;Database=<database_name>;UID=<username>;
 from psycopg import connect
 
 # postgresql://NOMBRE_USUARIO:PASSWORD_USUARIO@HOST:PUERTO/NOMBRE_BD
-credenciales = "postgresql://postgres:root@127.0.0.1:5432/flask_db"
+credenciales = environ.get("DATABASE_URL")
 conexion = connect(conninfo=credenciales)
 
 
@@ -61,6 +67,10 @@ def gestionar_productos():
         productos_bd = cursor.fetchall()
 
         print(productos_bd)
+
+        # Finaliza la comunicacion con la base de datos
+        cursor.close()
+
         resultado = []
 
         for producto in productos_bd:
@@ -70,7 +80,7 @@ def gestionar_productos():
                 "precio": float(producto[2]),
                 "cantidad": producto[3]
             })
-            
+
         # Los controladores (es la logica del endpoint) suelen retornar diccionarios que estos seran interpretados en JSON o tambien se suele retornar listas (arreglos)
         return {
             "message":"Los productos son:",
@@ -85,8 +95,17 @@ def gestionar_productos():
         # print(request.get_json())
         try:
             data = request.get_json()
-            # Ahora con la informacion correctamos agregamos este producto a nuestra lista
-            productos.append(data)
+
+            cursor = conexion.cursor()
+
+            # El %s hace la conversion de la informacion proveniente del cliente a un string sin parametros que puedan vulnerar mi base de datos y en los string comunes podemos usar %f para flotantes y adicionalmente el %i para convertir a enteros y asi podemos evitar ataques directos a la base de datos (SQL INYECTION)
+            # Si queremos retornar la informacion que acabamos de grabar en la base de datos se puede utilizar el comando RETURNING columnas, es decir, si ponemos INSERT INTO ... VALUES ... RETURNING * esto devolvera toda la informacion agregada a la bd
+            # https://www.psycopg.org/psycopg3/docs/basic/params.html
+            cursor.execute("INSERT INTO productos (nombre, precio, cantidad) VALUES (%s, %s, %s) RETURNING *",(
+                "Zapato Adidas", 
+                150.60, 
+                40))
+            
             return {
                 "message":"Producto creado exitosamente"
             }
