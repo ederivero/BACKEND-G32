@@ -102,10 +102,19 @@ def gestionar_productos():
             # Si queremos retornar la informacion que acabamos de grabar en la base de datos se puede utilizar el comando RETURNING columnas, es decir, si ponemos INSERT INTO ... VALUES ... RETURNING * esto devolvera toda la informacion agregada a la bd
             # https://www.psycopg.org/psycopg3/docs/basic/params.html
             cursor.execute("INSERT INTO productos (nombre, precio, cantidad) VALUES (%s, %s, %s) RETURNING *",(
-                "Zapato Adidas", 
-                150.60, 
-                40))
-            
+                data.get("nombre"), 
+                data.get("precio"), 
+                data.get("cantidad")))
+
+            # Para conservar la data y asegurarnos de que se guarde la informacion de manera permanente en la bd
+            conexion.commit()
+
+            # Para obtener el nuevo producto creado
+            nuevo_producto = cursor.fetchone()
+
+            print(nuevo_producto)
+
+            cursor.close()
             return {
                 "message":"Producto creado exitosamente"
             }
