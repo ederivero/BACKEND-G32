@@ -16,6 +16,7 @@ connection_str = environ.get("DATABASE_URL")
 # cursor_mssql = conexion_mssql.cursor()
 
 # PARA POSTGRES
+from psycopg.rows import dict_row
 from psycopg import connect
 
 # postgresql://NOMBRE_USUARIO:PASSWORD_USUARIO@HOST:PUERTO/NOMBRE_BD
@@ -74,10 +75,27 @@ def gestionar_productos():
         resultado = []
 
         for producto in productos_bd:
+            # Primer metodo con if-else
+            # precio = 0
+            # if producto[2]:
+            #     precio = float(producto[2])
+            # else:
+            #     precio = None
+
+            # resultado.append({
+            #     "id": producto[0],
+            #     "nombre": producto[1],
+            #     # Validar si el producto[2] no esta vacio convertirlo a float, caso contrario, devolver el valor actual
+            #     "precio": precio,
+            #     "cantidad": producto[3]
+            # })
+
+            # Segundo metodo con operador ternario
             resultado.append({
                 "id": producto[0],
                 "nombre": producto[1],
-                "precio": float(producto[2]),
+                # Validar si el producto[2] no esta vacio convertirlo a float, caso contrario, devolver el valor actual
+                "precio": float(producto[2]) if producto[2] else producto[2],
                 "cantidad": producto[3]
             })
 
@@ -117,14 +135,78 @@ def gestionar_productos():
             cursor.close()
             return {
                 "message":"Producto creado exitosamente"
-            }
+            },201 # Created (Creado)
         except UnsupportedMediaType:
             # Handler (manejador de errores)
             return {
                 "message": "Debes enviar la informacion en formato JSON"
-            }
+            }, 400 # Bad request (Mala solicitur)
         
 
+# En el endpoint cuando se coloca <variable> significa que esa parte recibira un valor diferente y ese valor se almacenara en la variable con ese nombre 
+@app.route('/producto/<id>', methods = ['GET', 'PUT', 'DELETE'])
+def gestionar_producto_por_id(id):
+    if request.method == 'GET':
+        cursor = conexion.cursor(row_factory=dict_row)
+        cursor.execute("SELECT * FROM productos WHERE id = %s",(id,))
+
+        resultado = cursor.fetchone()
+
+        print(resultado)
+
+        cursor.close()
+
+        # Si el producto no existe retornar un mensaje que el producto no existe, caso contrario mostrar el mensaje ok
+        if not resultado:
+            return {
+                "message":"Producto no encontrado"
+            }, 404 # Not found (no encontrado)
+
+        # En mssql-python (SQL SERVER) ya viene implementada la funcion de diccionario, es decir al ingresar al resultado puedo acceder como si fueran atributos como por ejemplo resultado.get("id")
+
+        return {
+            "content": resultado
+        }
+
+    elif request.method == 'PUT':
+        # cuando tenemos un error en unuestra operacion y hacemos un commit se queda "pegado" y no permite realizar otra operacion ya que esta bloqueado, entonces para liberar esa operacion y dejarla sin efecto usamos el rollback para deshacer todos los cambios y si no hay ningun error no tendra efecto este comando pero tampoco lanzara error
+        conexion.rollback()
+
+        cursor = conexion.cursor(row_factory=dict_row)
+        cursor.execute("SELECT id FROM productos WHERE id = %s", (id,))
+
+        producto_existente = cursor.fetchone()
+
+        if not producto_existente:
+            return {
+                "message": "Producto a actualizar no existe"
+            },404
+
+        # Ahora obtenemos la data proveniente del body
+        data = request.get_json()
+
+        # EL UPDATE SIEMPRE DEBE TENER UN WHERE
+        cursor.execute("UPDATE productos SET nombre = %s, precio= %s, cantidad = %s WHERE id = %s RETURNING *",(
+            data.get("nombre"),
+            data.get("precio"),
+            data.get("cantidad"),
+            id
+        ))
+
+        # En MSSQL primero obtenemos la data y luego hacemos commit sino nos retornara data nula
+
+        # Guardamos los cambios en la base de datos de manera permanente
+        conexion.commit()
+
+        # Obtenemos la info actualizada
+        producto_actualizado = cursor.fetchone()
+
+        cursor.close()
+
+        return {
+            "message":"Producto actualizado exitosamente",
+            "content": producto_actualizado 
+        }
 
 
 # ESTO SIEMPRE VA AL FINAL!!!!!
