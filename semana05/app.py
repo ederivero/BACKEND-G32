@@ -2,6 +2,7 @@
 from flask import Flask, request
 from werkzeug.exceptions import UnsupportedMediaType
 from dotenv import load_dotenv
+from flask_cors import CORS
 from os import environ # devolvera todas las variables de entorno de la maquina y aqui se agregaran las variables del archivo .env
 
 # el load_dotenv SIEMPRE debe ir en la primera linea del proyecto para que cargue todas las variables en todo el proyecto y evitar alguna variable no leida
@@ -31,6 +32,11 @@ conexion = connect(conninfo=credenciales)
 # python 01.py > y dentro de este archivo mando a llamar a app.py entonces el valor de __name__ sera secondary y por ende no será el archivo principal del proyecto.
 # Flask se utiliza el patrón de diseño de Singleton
 app = Flask(__name__)
+
+# https://flask-cors.corydolphin.com/extension/
+CORS(app, origins=['http://127.0.0.1:5500'], methods=['GET','POST','PUT','DELETE'])
+
+
 
 productos = [
     {
@@ -207,6 +213,38 @@ def gestionar_producto_por_id(id):
             "message":"Producto actualizado exitosamente",
             "content": producto_actualizado 
         }
+
+    elif request.method =='DELETE':
+        conexion.rollback()
+        cursor = conexion.cursor(row_factory=dict_row)
+
+        cursor.execute("SELECT id FROM productos WHERE id = %s", (id,))
+        producto_existente = cursor.fetchone()
+
+        if not producto_existente:
+            return {
+                "message":"Producto no encontrado"
+            }, 404
+
+        cursor.execute("DELETE FROM productos WHERE id = %s", (id,))
+
+        conexion.commit()
+
+        return {
+            "message": "Producto eliminado"
+        }
+
+
+# QUERY PARAMS
+# parametros enviados por la URL en el cual el cliente pone el nombre de parametro y su valor, esto generalmente se usa para metodos GET porque en los GET JAMAS se envia BODY
+@app.route('/buscar-producto')
+def buscar_producto():
+    print(request.args)
+
+    return {
+        "content": []
+    }
+
 
 
 # ESTO SIEMPRE VA AL FINAL!!!!!

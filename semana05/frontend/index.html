@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Productos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="header-dot loading" id="statusDot"></div>
+    <h1>Gestor de Productos</h1>
+  </div>
+
+  <div class="layout">
+
+    <!-- ── TABLA DE PRODUCTOS ── -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Productos</span>
+        <div class="card-header-actions">
+          <span class="badge" id="countBadge">—</span>
+          <button class="btn btn-sm" id="btnObtener">Obtener productos</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="productosBody">
+            <tr>
+              <td colspan="5" class="table-empty">
+                <span>⏳</span>
+                Conectando con el servidor…
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <div class="tabs">
+        <button class="tab active" id="tabCrear">Crear</button>
+        <button class="tab" id="tabEditar">Editar</button>
+        <button class="tab" id="tabBuscar">Buscar</button>
+      </div>
+
+      <div class="panel active" id="panelCrear">
+        <form class="form-body" id="formCrear">
+          <div class="field">
+            <label for="cNombre">Nombre</label>
+            <input type="text" id="cNombre" placeholder="Ej. Botella de vidrio" required autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="cPrecio">Precio (S/.)</label>
+            <input type="number" id="cPrecio" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+          <div class="field">
+            <label for="cCantidad">Cantidad</label>
+            <input type="number" id="cCantidad" placeholder="0" step="1" min="0" required>
+          </div>
+          <button class="btn" type="submit" id="btnCrear">Crear producto</button>
+        </form>
+      </div>
+
+      <div class="panel" id="panelEditar">
+        <form class="form-body" id="formEditar">
+          <p class="hint" id="editHint">
+            Haz clic en ✏️ de la tabla para editar un producto.
+          </p>
+          <div class="field">
+            <label for="eNombre">Nombre</label>
+            <input type="text" id="eNombre" placeholder="Nombre" required autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="ePrecio">Precio (S/.)</label>
+            <input type="number" id="ePrecio" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+          <div class="field">
+            <label for="eCantidad">Cantidad</label>
+            <input type="number" id="eCantidad" placeholder="0" step="1" min="0" required>
+          </div>
+          <div class="form-divider">
+            <button class="btn" type="submit" id="btnActualizar" disabled>Actualizar</button>
+            <button class="btn btn-danger" type="button" id="btnEliminar" disabled>Eliminar</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel" id="panelBuscar">
+        <form class="form-body" id="formBuscar">
+          <div class="field">
+            <label for="bId">ID del producto</label>
+            <input type="number" id="bId" placeholder="Ej. 1" min="1" required>
+          </div>
+          <button class="btn" type="submit" id="btnBuscar">Buscar</button>
+
+          <div id="resultadoBuscar" hidden>
+            <div class="resultado-grid">
+              <div class="field">
+                <label>ID</label>
+                <input type="text" id="rId" readonly>
+              </div>
+              <div class="field">
+                <label>Nombre</label>
+                <input type="text" id="rNombre" readonly>
+              </div>
+              <div class="field">
+                <label>Precio</label>
+                <input type="text" id="rPrecio" readonly>
+              </div>
+              <div class="field">
+                <label>Cantidad</label>
+                <input type="text" id="rCantidad" readonly>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div><!-- /card panel derecho -->
+  </div><!-- /layout -->
+
+  <!-- Toast de notificaciones -->
+  <div id="toast"></div>
+
+  <!-- Archivo JavaScript separado -->
+  <script src="app.js"></script>
+
+</body>
+
+</html>
