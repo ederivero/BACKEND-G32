@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 # Importaciones especificas 
 from app import create_app
 # Importaciones totales (toda la informacion del archivo)
