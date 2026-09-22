@@ -1,0 +1,6 @@
+.env
+# Asi ignoramos la carpeta con nombre __pycache__
+__pycache__
+
+# Asi ignoramos todos los archivos con extension pyc
+*.pyc
