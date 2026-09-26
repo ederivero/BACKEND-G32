@@ -1,11 +1,14 @@
 from flask import Flask
+from flask_restful import Api
 from .config import config_map
 from .models import *
 from .extensions import db, migrate
+from .api import CategoriaController
 
 # Al usar el patron de diseño Application Factory se recomienda crear una funcion llamada create_app en la cual se inicializara todo el proyecto y asi mismo puede recibir parametros para los diferentes entornos de prueba
 def create_app(env = "development"):
     app = Flask(__name__)
+    api = Api(app)
     # from_object > actualiza los valores que le pasemos en el parametro para que la instancia de Flask arranque con esas modificaciones de sus parametros, por ejemplo Debug, entre otros
     app.config.from_object(config_map[env])
 
@@ -15,5 +18,7 @@ def create_app(env = "development"):
     # Inicializamos la instancia de las migraciones para ahora declara nuestra configuracion de la instancia de flask y nuestra configuracion de la base de datos
     migrate.init_app(app, db)
 
-
+    # Registramos las rutas de nuestra API
+    # add_resource(Controlador, "Ruta/Endpoint")
+    api.add_resource(CategoriaController, "/categorias")
     return app
