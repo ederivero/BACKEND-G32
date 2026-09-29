@@ -90,3 +90,19 @@ class CategoriaController(Resource):
             'message':'Categoria modificada exitosamente',
             'content': resultado
         }
+
+    def delete(self, id):
+        categoriaEncontrada = self.validarCategoria(id)
+        if not categoriaEncontrada:
+            return {
+                'message':'Categoria no existe'
+            }, 404
+
+        # DELETE FROM categorias WHERE id = ...;
+        db.session.query(Categoria).filter(Categoria.id == id).delete()
+
+        db.session.commit()
+
+        # En los deletes permanentes se suele no retornar nada y solo retornar un estado 204 (No Content)
+        return None,204
+        
