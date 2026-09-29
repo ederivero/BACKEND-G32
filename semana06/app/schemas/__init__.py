@@ -1,1 +1,1 @@
-from .categorias import CategoriaSerializer
+from .categorias import CategoriaSchema
