@@ -9,3 +9,4 @@ class Libro(db.Model):
     fechaPublicacion = Column(name='fecha_publicacion', type_=types.Date)
     prologo = Column(type_=types.Text)
     isbn = Column(type_=types.VARCHAR(20), unique=True, nullable=False)
+    eliminado = Column(type_=types.Boolean, default=False)

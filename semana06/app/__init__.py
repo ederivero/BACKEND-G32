@@ -3,7 +3,7 @@ from flask_restful import Api
 from .config import config_map
 from .models import *
 from .extensions import db, migrate
-from .api import CategoriasController, CategoriaController
+from .api import CategoriasController, CategoriaController, LibrosController, LibroController
 
 # Al usar el patron de diseño Application Factory se recomienda crear una funcion llamada create_app en la cual se inicializara todo el proyecto y asi mismo puede recibir parametros para los diferentes entornos de prueba
 def create_app(env = "development"):
@@ -23,4 +23,6 @@ def create_app(env = "development"):
     api.add_resource(CategoriasController, "/categorias")
     #al momento de registrar una ruta y si esta contiene <> significara que esta parte de la ruta es dinamica, es decir, aceptara valores y los pondra en esa variable, y esta variable tiene que tener el mismo nombre al momento de definir el metodo, se puede restring el tipo de dato poniendo antes el tipo y luego :
     api.add_resource(CategoriaController, '/categoria/<int:id>')
+    api.add_resource(LibrosController, '/libros')
+    api.add_resource(LibroController,'/libro/<int:id>')
     return app
