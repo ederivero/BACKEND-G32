@@ -3,7 +3,7 @@ from flask_restful import Api
 from .config import config_map
 from .models import *
 from .extensions import db, migrate
-from .api import CategoriasController, CategoriaController, LibrosController, LibroController
+from .api import CategoriasController, CategoriaController, LibrosController, LibroController, LibrosCategoriasController
 
 # Al usar el patron de diseño Application Factory se recomienda crear una funcion llamada create_app en la cual se inicializara todo el proyecto y asi mismo puede recibir parametros para los diferentes entornos de prueba
 def create_app(env = "development"):
@@ -25,4 +25,5 @@ def create_app(env = "development"):
     api.add_resource(CategoriaController, '/categoria/<int:id>')
     api.add_resource(LibrosController, '/libros')
     api.add_resource(LibroController,'/libro/<int:id>')
+    api.add_resource(LibrosCategoriasController, '/libro-categorias')
     return app
