@@ -67,6 +67,9 @@ class CategoriaController(Resource):
         respuesta = CategoriaSchema.model_validate(categoriaEncontrada).model_dump()
 
         # cuando se pida una categoria por su id, devolver la cantidad de libros que contiene esa categoria
+        # print(categoriaEncontrada.libro_categorias)
+        libros = len(categoriaEncontrada.libro_categorias)
+        respuesta['libros'] = libros
 
         return {
             'content': respuesta
