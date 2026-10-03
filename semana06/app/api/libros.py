@@ -38,6 +38,11 @@ class LibrosController(Resource):
             }
 
     def get(self):
+        # Asi obtengo los query params enviados por el cliente
+        print(request.args)
+        pagina = request.args.get('page')
+        porPagina = request.args.get('perPage')
+        
         libros = db.session.query(Libro).filter(Libro.eliminado==False).all()
         adaptador = TypeAdapter(list[LibroSchema])
         informacion = adaptador.validate_python(libros)
