@@ -8,8 +8,11 @@ class LibrosCategoriasController(Resource):
     def post(self):
         try:
             # el request.get_json() obtiene la data enviada por el cliente a traves del body y la convierte a un diccionario
+            # {categoriaIds: [1,1,2,3,4,5]}
             dataValidada = LibrosCategoriasSchema.model_validate(request.get_json()) 
-
+            # {categoriaIds: [1,2,3,4,5]}
+            
+            # [(1,),(2,),(3,)] > [1,2,3]
             registros = db.session.query(LibroCategoria).with_entities(LibroCategoria.categoriaId).filter(LibroCategoria.libroId == dataValidada.libroId).all()
 
             registroIds = [fila[0] for fila in registros]

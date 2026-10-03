@@ -1,8 +1,9 @@
 from flask_restful import Resource, request
+from pydantic import ValidationError, TypeAdapter
+from datetime import datetime
 from app.models import Libro
 from app.extensions import db
 from app.schemas import LibroSchema
-from pydantic import ValidationError, TypeAdapter
 
 class LibrosController(Resource):
     def post(self):
@@ -69,4 +70,41 @@ class LibroController(Resource):
 
         return {
             'message':'Libro eliminado exitosamente'
+        }
+
+
+    def get(self,id):
+        libroEncontrado = db.session.query(Libro).filter(Libro.id==id).first()
+
+        if not libroEncontrado:
+            return {
+                "message":'El libro no existe'
+            },404
+
+        # Gracias al relationship creado en LibroCategoria se crea el atributo virtual en la clase de Libro con el nombre colocado en el parametro backref y cuando ingreso a este parametro podre obtener todas sus libroCategorias pertenecientes a este libro y del mismo podre podre acceder a la categoria a la que pertenece gracias al relationship , en este caso seria categorias
+        # print(libroEncontrado.libro_categorias)
+        # print(libroEncontrado.libro_categorias[0].categoria.nombre)
+        
+        categorias = []
+
+        for libroCategoria in libroEncontrado.libro_categorias:
+            categorias.append({
+                "id": libroCategoria.categoria.id,
+                "nombre": libroCategoria.categoria.nombre
+            })
+
+        resultado = {
+            "id": libroEncontrado.id,
+            "nombre": libroEncontrado.nombre,
+            # strftime convierte una fecha a un string usando el patron definido,
+            # a diferencia del metodo strptime que convierte un string a una fecha usando el patro de lectura
+            "fechaPublicacion": datetime.strftime(libroEncontrado.fechaPublicacion,"%Y-%m-%d %H:%M:%S"), # ISO 8601 
+            "prologo": libroEncontrado.prologo,
+            "isbn": libroEncontrado.isbn,
+            "categorias":categorias
+        }
+
+
+        return {
+            'content': resultado
         }
