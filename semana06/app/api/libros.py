@@ -4,6 +4,7 @@ from datetime import datetime
 from app.models import Libro
 from app.extensions import db
 from app.schemas import LibroSchema
+from app.util import paginationInfo
 
 class LibrosController(Resource):
     def post(self):
@@ -40,15 +41,27 @@ class LibrosController(Resource):
     def get(self):
         # Asi obtengo los query params enviados por el cliente
         print(request.args)
-        pagina = request.args.get('page')
-        porPagina = request.args.get('perPage')
+        pagina = int(request.args.get('page',1))
+        porPagina = int(request.args.get('perPage',10))
+
+        offset = (pagina - 1) * porPagina
+        limit = porPagina
+        # Siempre en un controlador con paginacion necesito yo saber cuantos elementos tengo para devolver, eso no significa que tenga que tener los elementos
+        # SELECT COUNT(*) FROM libros;
+        # Siempre hay que mantener los mismos filtros en ambas busquedas para evitar tener resultados diferentes
+        total = db.session.query(Libro).filter(Libro.eliminado==False).count()
+        libros = db.session.query(Libro).filter(Libro.eliminado==False).offset(offset).limit(limit).all()
+
         
-        libros = db.session.query(Libro).filter(Libro.eliminado==False).all()
+
         adaptador = TypeAdapter(list[LibroSchema])
         informacion = adaptador.validate_python(libros)
 
+
+        pageInfo = paginationInfo(total,pagina,porPagina)
         return {
-            'content': adaptador.dump_python(informacion, mode='json')
+            'content': adaptador.dump_python(informacion, mode='json'),
+            'pageInfo': pageInfo
         }
 
 
