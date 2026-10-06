@@ -2,6 +2,8 @@ from flask import Flask
 from flask_restful import Api
 from .config import config_map
 from .extensions import db, migrate
+from .models import *
+from .api import RegistroController
 
 def create_app(env='development'):
     app = Flask(__name__)
@@ -11,4 +13,6 @@ def create_app(env='development'):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    api.add_resource(RegistroController, '/registro')
+    
     return app
