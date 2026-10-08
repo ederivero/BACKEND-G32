@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
+from uuid import UUID
 from re import search
 
 class RegistroUsuarioSchema(BaseModel):
@@ -41,3 +42,12 @@ class RegistroUsuarioSchema(BaseModel):
 class LoginUsuarioSchema(BaseModel):
     correo: EmailStr
     password: str
+
+class UsuarioSchema(BaseModel):
+    # Poder recibir desde una instancia de la clase del modelo sin la necesidad de pasarlo como diccionario
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    correo: EmailStr
+    nombre: str
+    apellido: str | None
