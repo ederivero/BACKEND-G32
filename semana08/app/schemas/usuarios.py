@@ -4,7 +4,7 @@ from re import search
 class RegistroUsuarioSchema(BaseModel):
     # EmailStr > valida que el texto tenga el formato blabla@blabla.com
     correo: EmailStr = Field(max_length=100)
-    password:str = Field(min_length=8, max_length=128)
+    password:str = Field( max_length=128)
     nombre:str = Field(min_length=1)
     apellido:str | None = Field(default=None)
 
@@ -15,6 +15,9 @@ class RegistroUsuarioSchema(BaseModel):
     @field_validator("password")
     def validar_password(cls,valor):
         errores = []
+
+        if len(valor)<8:
+            errores.append("El password no debe ser menor a 8 caracteres")
 
         # Expresiones Regulares (REGEX) es una forma de validar si un texto cumple o no con determinadas reglas sin importar su contenido, es decir, al menos una mayus, al menos una minus, al menos un numero, al menos un caratecer especial
         if not search(r"[A-Z]", valor):
@@ -31,6 +34,10 @@ class RegistroUsuarioSchema(BaseModel):
             errores.append("Falta un caracter especial")
 
         if errores:
-            raise ValueError("La password requiere: ".join(errores))
+            raise ValueError(", ".join(errores))
 
         return valor
+
+class LoginUsuarioSchema(BaseModel):
+    correo: EmailStr
+    password: str
