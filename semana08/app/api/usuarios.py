@@ -10,6 +10,7 @@ from cryptography import fernet
 from os import getenv
 from json import dumps
 from datetime import timedelta, datetime
+from app.util import enviar_correo
 
 class RegistroController(Resource):
     def post(self):
@@ -178,6 +179,13 @@ class ResetPasswordController(Resource):
             dataConvertida = dumps(data).encode()
             dataEncriptada = encriptador.encrypt(dataConvertida)
             print(dataEncriptada)
+
+            cuerpo = f"""
+<h1>Hola! </h1>
+<p>Haz solicitado restaurar tu password, para hacerlo haz click en el siguiente enlace: {dataEncriptada.decode()}. </br>
+Si no has sido tu, haz caso omiso a este correo. </p>
+"""
+            enviar_correo(usuarioEncontrado.correo,"Resetear password", cuerpo)
 
             return {
                 'message':'Se envio el correo para la restauracion'
