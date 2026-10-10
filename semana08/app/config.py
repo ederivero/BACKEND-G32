@@ -3,6 +3,7 @@ from os import getenv
 class Base:
     SQLALCHEMY_TRACK_MODIFICATION = False
     JWT_SECRET_KEY = getenv('JWT_SECRET_KEY')
+    FERNET_KEY = getenv('FERNET_KEY')
 
 class Development(Base):
     DEBUG = True

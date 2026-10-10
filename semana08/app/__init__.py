@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 from .config import config_map
 from .extensions import db, migrate
 from .models import *
-from .api import RegistroController, LoginController, UsuarioController
+from .api import RegistroController, LoginController, UsuarioController, ChangePasswordController, ResetPasswordController
 
 def create_app(env='development'):
     app = Flask(__name__)
@@ -19,5 +19,8 @@ def create_app(env='development'):
     api.add_resource(RegistroController, '/registro')
     api.add_resource(LoginController, '/login')
     api.add_resource(UsuarioController, '/usuario')
+    api.add_resource(ChangePasswordController, '/change-password')
+    api.add_resource(ResetPasswordController,'/reset-password')
+
 
     return app

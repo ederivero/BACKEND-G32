@@ -1,1 +1,1 @@
-from .usuarios import RegistroController, LoginController, UsuarioController
+from .usuarios import RegistroController, LoginController, UsuarioController, ChangePasswordController, ResetPasswordController

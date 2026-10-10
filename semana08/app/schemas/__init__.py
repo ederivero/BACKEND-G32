@@ -1,1 +1,1 @@
-from .usuarios import RegistroUsuarioSchema, LoginUsuarioSchema, UsuarioSchema
+from .usuarios import RegistroUsuarioSchema, LoginUsuarioSchema, UsuarioSchema, ResetPasswordSchema, ChangePasswordSchema
