@@ -1,0 +1,4 @@
+django-admin startproject NOMBRE_PROYECTO       > Crea un nuevo proyecto con el nombre que le coloquemos y este servira para que funcione Django
+py manage.py runserver              > Levanta el proyecto de Django en modo de desarrollo
+py manage.py migrate                > Ejecuta las migraciones faltantes en la base de datos
+py manage.py showmigrations         > Muestra todas las migraciones que hay en el proyecto y las que estan en la bd [X]
