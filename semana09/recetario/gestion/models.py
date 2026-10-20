@@ -9,6 +9,10 @@ class Receta(models.Model):
     descripcion = models.TextField()
     habilitado = models.BooleanField(default=True)
 
+    def __str__(self):
+        # Es un metodo de las clases de python que sirve para modificar la forma en la cual se representara la instancia 
+        return self.titulo
+
     class Meta:
         # SIEMPRE SE LLAMA META porque En los modelos se usa para poder modificar las propiedades del modelo como su nombre de la tabla, ordenamiento
         # Metatributes 
@@ -19,7 +23,6 @@ class Receta(models.Model):
         ordering = ['titulo']
         # constraints sirve para poder indicar una unicidad en conjunto, es decir 
         # constraints = [['titulo','descripcion'], ['titulo','habilitado']]
-
 
 class Ingrediente(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4)
@@ -54,3 +57,5 @@ class Preparacion(models.Model):
         #   2   |    1 [X]
         # https://docs.djangoproject.com/en/6.1/ref/models/options/#unique-together
         unique_together = [['orden','recetaId']]
+        # Sirve para modificar el nombre pluralizado que se mostrara SOLAMENTE en la panel administrativo
+        verbose_name_plural='Preparaciones'
