@@ -1,0 +1,11 @@
+{# Sirve para poder reutilizar una plantilla previamente creada #}
+{% extends "base.html" %}
+{# Ahora reutilizamos el block creado en base para poder manejar su contenido #}
+{% block titulo %} Listado de recetas {% endblock %}
+{% block contenido %}
+<ul>
+    {% for receta in recetas %}
+    <li>{{ receta.titulo }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
