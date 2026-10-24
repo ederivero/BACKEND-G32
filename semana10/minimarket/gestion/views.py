@@ -123,6 +123,14 @@ class DevolverActualizarEliminarCategoriaView(RetrieveUpdateDestroyAPIView):
 class ProductosView(ViewSet):
     def create(self, request: Request):
         serializador = ProductoSerializer(data=request.data)
+        # Aca validar si la categoria enviada no ha sido eliminada, si esta eliminada entonces no proceder con la creacion del producto
+        categoriaEncontrada =Categoria.objects.filter(id= request.data.get("categoria"), eliminado=False).first()
+        if not categoriaEncontrada:
+            return Response({
+                "message":"Error al crear el producto",
+                "content": "Categoria no existe"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
         if serializador.is_valid():
             serializador.save()
 

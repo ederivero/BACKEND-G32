@@ -32,7 +32,7 @@ class Producto(models.Model):
     eliminado  = models.BooleanField(default=False)
     
     categoria = models.ForeignKey(to=Categoria, on_delete=models.PROTECT, db_column='categoria_id')
-    media = models.ForeignKey(to=Media, on_delete=models.PROTECT, db_column='media_id')
+    media = models.ForeignKey(to=Media, on_delete=models.PROTECT, db_column='media_id', null=True)
 
     class Meta:
         db_table = 'productos'
