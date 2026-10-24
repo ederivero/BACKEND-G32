@@ -12,14 +12,17 @@ from rest_framework.generics import (CreateAPIView, # crear
                                     RetrieveUpdateAPIView, # eliminar y ademas poder actualizar
                                     RetrieveUpdateDestroyAPIView, # devolver solo uno y ademas poder actualizarlo o eliminarlo
                                     UpdateAPIView) # actualizar
-from .models import Categoria
-from .serializers import CategoriaSerializer
+from rest_framework.viewsets import ViewSet
+
+from .models import Categoria, Producto
+from .serializers import CategoriaSerializer, ProductoSerializer
 
 class CategoriasView(APIView):
     # al usar una APIView esto es muy similar al Resource de flask-restful en el cual se puede colocar los metodos http como metodos de la clase
 
     def get(self, request):
-        categorias = Categoria.objects.all()
+        # SELECT * FROM categorias WHERE eliminado = FALSE
+        categorias = Categoria.objects.filter(eliminado=False).all()
         # Si se pasa un conjunto de instancias estamos en la obligacion de colocar many=True para que el serializador pueda iterar y transforma cada una de las instancias
         dataSerializada = CategoriaSerializer(instance=categorias, many=True)
         # en django no se puede retornar directamente un diccionario sino que tiene que crearse la instancia de la clase Response
@@ -48,6 +51,13 @@ class CategoriasView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 # GET | PUT | DELETE
+# Si mi vista generica deja de ser generica entonces la puedo convertir en un viewset en el cual
+# post > create
+# get > retrieve
+# get > list (si se va a retornar varios registros)
+# put > update
+# delete > destroy
+# patch > partial_update
 class DevolverActualizarEliminarCategoriaView(RetrieveUpdateDestroyAPIView):
     # SELECT * FROM categorias
     # Es la forma en la cual la vista se comunicara con la bd
@@ -59,3 +69,73 @@ class DevolverActualizarEliminarCategoriaView(RetrieveUpdateDestroyAPIView):
     # lookup_field sirve para indicar el parametro que se usara para identificar la PK (llave primaria)
     lookup_field = 'id'
 
+    # Devolver solo una categoria
+    def retrieve(self, request, id):
+        # al usar el retrieve | update | destroy siempre lo enviara como 2do parametro
+        categoriaEncontrada = Categoria.objects.filter(eliminado=False, id = id).first()
+        
+        if not categoriaEncontrada:
+            return Response(data={
+                "message":"Categoria no existe"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        dataSerializada = self.serializer_class(instance= categoriaEncontrada)
+
+        return Response(data={
+            "content": dataSerializada.data
+        })
+
+    def update(self, request, id):
+        categoriaEncontrada = Categoria.objects.filter(eliminado=False, id = id).first()
+        if not categoriaEncontrada:
+            return Response(data={
+                "message":"Categoria no existe"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        serializador = self.serializer_class(data=request.data)
+        if serializador.is_valid():
+            serializador.update(categoriaEncontrada,serializador.validated_data)
+
+            return Response(data={
+                "message":"Categoria actualizada exitosamente",
+                "content": serializador.data
+            })
+
+        else:
+            return Response(data={
+                "message":"Error al actualizar la categoria",
+                "content": serializador.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, id):
+        categoriaEncontrada = Categoria.objects.filter(eliminado=False, id = id).first()
+        if not categoriaEncontrada:
+            return Response(data={
+                "message":"Categoria no existe"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        # Cambiamos el estado de eliminado a verdadero
+        categoriaEncontrada.eliminado = True
+        categoriaEncontrada.save()
+
+        return Response(data=None, status=status.HTTP_204_NO_CONTENT)
+
+class ProductosView(ViewSet):
+    def create(self, request: Request):
+        serializador = ProductoSerializer(data=request.data)
+        if serializador.is_valid():
+            serializador.save()
+
+            return Response(data={
+                "message":"Producto creado exitosamente",
+                "content": serializador.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data={
+                "message":"Error al crear el producto",
+                "content": serializador.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        pass
