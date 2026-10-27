@@ -16,6 +16,7 @@ from rest_framework.viewsets import ViewSet
 
 from .models import Categoria, Producto
 from .serializers import CategoriaSerializer, ProductoSerializer
+from uuid import UUID
 
 class CategoriasView(APIView):
     # al usar una APIView esto es muy similar al Resource de flask-restful en el cual se puede colocar los metodos http como metodos de la clase
@@ -145,5 +146,38 @@ class ProductosView(ViewSet):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def list(self, request):
-        pass
+    def list(self, request: Request):
+        # Al usar el get en un query param solamente retornara la primera informacion del query param, es decir, si se envia una lista solamente tomara el primero , en cambio, el getlist obtiene todos los valores y los retornar en formato de lista para poder ser iterables
+        categoria = request.query_params.getlist('categoria')
+        nombre = request.query_params.get('nombre')
+
+        filtros = {
+            "eliminado": False
+        }
+        
+        if categoria:
+            filtros["categoria"] = []
+
+            for categoriaId in categoria:
+                # Aca hacemos la validacion si el id de la categoria es UUID valido, para evitar algun error pero del lado de la base de datos
+                try:
+                    UUID(categoriaId)
+                except:
+                    return Response(data={
+                        "message": f"El id de la categoria {categoriaId} es invalido"
+                    })
+                
+                categoriaEncontrada = Categoria.objects.filter(id = categoriaId, eliminado = False).first()
+                if categoriaEncontrada:
+                    filtros["categoria"].append(str(categoriaEncontrada.id))
+
+        if nombre:
+            # en SQL al usar el % en una busqueda de LIKE o ILIKE estamos indicando que no interesa que caracteres vienen antes o vienen despues
+            filtros["nombre"] = '%'+nombre+'%' # la sumatorian cuando son string se vuelve concatenacion
+
+        print(filtros)
+        productos = Producto.objects.filter(eliminado=False).all()
+        serializador = ProductoSerializer(instance= productos, many=True)
+        return Response(data={
+            "content":serializador.data
+        })
