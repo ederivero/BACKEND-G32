@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import CategoriasView, DevolverActualizarEliminarCategoriaView, ProductosView, ProductoView
+from .views import (CategoriasView, 
+                    DevolverActualizarEliminarCategoriaView, 
+                    ProductosView,
+                    ProductoView, 
+                    crearUrlParaSubirArchivo)
 
 urlpatterns = [
     # as_view convierte la vista creada con DRF a una vista que la pueda entender Django y pueda servirla
@@ -14,5 +18,6 @@ urlpatterns = [
     path('producto/<id>', ProductoView.as_view({
         "get":"retrieve",
         "delete":"destroy"
-    }))
+    })),
+    path('generar-url',crearUrlParaSubirArchivo)
 ]
