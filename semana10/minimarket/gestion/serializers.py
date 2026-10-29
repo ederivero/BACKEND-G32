@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework import serializers
-from .models import Categoria, Producto
+from .models import Categoria, Producto, Media
 
 # https://www.django-rest-framework.org/api-guide/serializers/#modelserializer
 class CategoriaSerializer(ModelSerializer):
@@ -46,3 +46,8 @@ class GenerarUrlAWSSerializer(Serializer):
     # El valor maximo 10mb y el minimo 5kb
     size = serializers.FloatField(max_value=10*1024*1024, min_value = 5*1024, required=True)
     folder = serializers.CharField(required=False)
+
+class MediaSerializer(ModelSerializer):
+    class Meta:
+        model = Media
+        fields = '__all__'
