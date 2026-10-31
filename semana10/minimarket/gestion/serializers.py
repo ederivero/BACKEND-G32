@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework import serializers
-from .models import Categoria, Producto, Media
+from .models import Categoria, Producto, Media, Precio
 
 # https://www.django-rest-framework.org/api-guide/serializers/#modelserializer
 class CategoriaSerializer(ModelSerializer):
@@ -60,3 +60,8 @@ class MediaSerializer(ModelSerializer):
     class Meta:
         model = Media
         fields = '__all__'
+
+class PrecioSerializer(ModelSerializer):
+    class Meta:
+        model = Precio
+        exclude = ['eliminado']

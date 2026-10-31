@@ -27,7 +27,6 @@ class Media(models.Model):
 class Producto(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True)
     nombre = models.CharField(max_length=200, null=False)
-    disponible = models.BooleanField(default=True)
     habilitado = models.BooleanField(default=True) 
     eliminado  = models.BooleanField(default=False)
     
@@ -41,7 +40,6 @@ class Producto(models.Model):
 class Precio(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2, null=False)
-    disponible = models.BooleanField(null=False)
     habilitado = models.BooleanField(default=True) 
     eliminado  = models.BooleanField(default=False)
 

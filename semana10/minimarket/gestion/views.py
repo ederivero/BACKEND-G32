@@ -15,7 +15,7 @@ from rest_framework.generics import (CreateAPIView, # crear
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import api_view
 
-from .models import Categoria, Producto
+from .models import Categoria, Producto, Media
 from .serializers import (CategoriaSerializer, 
                           ProductoSerializer, 
                           ProductoDetalleSerializer, 
@@ -141,8 +141,22 @@ class ProductosView(ViewSet):
             }, status=status.HTTP_400_BAD_REQUEST)
         
         if serializador.is_valid():
-            serializador.save()
-
+            # Al momento de agregar nueva informacion a mi instancia de mi clase tengo que guardar esa informacion en una variable para luego poder alterarla sino las modificaciones que haga no se podra visualizar
+            nuevoProducto = serializador.save()
+            media = serializador.validated_data.get('media')
+            if media:
+                # Cuando se guarda el nuevo producto en la bd el metodo is_valid tambien se encarga de hacer la validacion de que exista la relaciones y asi mismo reemplaza las llaves por las instancias correspondientes
+                key = media.ruta + media.nombre + '.' + media.ext
+                s3 = client('s3')
+                url = s3.generate_presigned_url(
+                    ClientMethod = 'get_object', # Obtener
+                    Params = {
+                        "Bucket": getenv('BUCKET_NAME'),
+                        "Key": key
+                    },
+                    ExpiresIn=30 
+                )
+                nuevoProducto.url = url
             return Response(data={
                 "message":"Producto creado exitosamente",
                 "content": serializador.data
@@ -195,26 +209,25 @@ class ProductosView(ViewSet):
 
         # Agregamos la forma para devolver una url de visualizacion de la imagen si el producto lo tiene
         for producto in productos:
-            print(producto.media)
-            key = producto.media.ruta + producto.media.nombre + '.' + producto.media.ext
-            s3 = client('s3')
-            url = s3.generate_presigned_url(
-                ClientMethod = 'get_object', # Obtener
-                Params = {
-                    "Bucket": getenv('BUCKET_NAME'),
-                    "Key": key
-                },
-                ExpiresIn=30 
-            )
-            print(url)
-            # Agrego a la instancia de producto un nuevo atributo llamado url que hara match con el atributo del serializador 
-            producto.url = url
+            if producto.media:
+                key = producto.media.ruta + producto.media.nombre + '.' + producto.media.ext
+                s3 = client('s3')
+                url = s3.generate_presigned_url(
+                    ClientMethod = 'get_object', # Obtener
+                    Params = {
+                        "Bucket": getenv('BUCKET_NAME'),
+                        "Key": key
+                    },
+                    ExpiresIn=30 
+                )
+                print(url)
+                # Agrego a la instancia de producto un nuevo atributo llamado url que hara match con el atributo del serializador 
+                producto.url = url
 
         serializador = ProductoSerializer(instance= productos, many=True)
         return Response(data={
             "content":serializador.data
         })
-
 
 class ProductoView(ViewSet):
     def retrieve(self, request:Request, id):
@@ -245,7 +258,6 @@ class ProductoView(ViewSet):
         productoEncontrado.save()
 
         return Response(data=None, status=status.HTTP_204_NO_CONTENT)
-
 
 @api_view(http_method_names=['POST'])
 def crearUrlParaSubirArchivo(request:Request):
@@ -305,3 +317,15 @@ def crearMedia(request:Request):
             "message":"Error al crear el archivo",
             "content": serializador.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PreciosView(APIView):
+    def post(self, request:Request):
+        # 1. Verificar si el producto no tiene un precio habilitado
+        # 2. Si tiene un precio habilitado y este nuevo a precio a crear viene con la opcion de habilitado en True, entonces deshabilitar el anterior precio y crear este precio
+        # 3. si no tiene la opcion de habilitado en true no hacer la validacion y crearlo
+        # 4. OPCIONAL Si es un precio totalmente nuevo para este producto (osea no ha tenido precio anterior) entonces no validar nada
+        pass
+
+    def get(self,request:Request):
+        pass
