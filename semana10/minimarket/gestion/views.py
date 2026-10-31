@@ -15,12 +15,13 @@ from rest_framework.generics import (CreateAPIView, # crear
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import api_view
 
-from .models import Categoria, Producto, Media
+from .models import Categoria, Producto, Media, Precio
 from .serializers import (CategoriaSerializer, 
                           ProductoSerializer, 
                           ProductoDetalleSerializer, 
                           GenerarUrlAWSSerializer, 
-                          MediaSerializer)
+                          MediaSerializer,
+                          PrecioSerializer)
 from uuid import UUID, uuid4
 from boto3 import client
 from os import getenv
@@ -325,7 +326,37 @@ class PreciosView(APIView):
         # 2. Si tiene un precio habilitado y este nuevo a precio a crear viene con la opcion de habilitado en True, entonces deshabilitar el anterior precio y crear este precio
         # 3. si no tiene la opcion de habilitado en true no hacer la validacion y crearlo
         # 4. OPCIONAL Si es un precio totalmente nuevo para este producto (osea no ha tenido precio anterior) entonces no validar nada
-        pass
+        
+        serializador = PrecioSerializer(data = request.data)
+        
+        # AGREGAR VALIDACION PARA QE SOLAMENTE SE PUEDE AGREGAR UN PRECIO A UN PRODUCTO QUE NO ESTE ELIMINADO
+        productoEliminado = Producto.objects.filter(id = serializador.initial_data.get('producto'), eliminado = True).first()
+        if productoEliminado:
+            return Response(data={
+                "message":"Producto no existe"
+            }, status =status.HTTP_400_BAD_REQUEST)
 
-    def get(self,request:Request):
-        pass
+        precioDelProducto = Precio.objects.filter(producto = serializador.initial_data.get('producto')).first()
+
+        if serializador.is_valid():
+            habilitado = serializador.validated_data.get("habilitado", True)
+            # Primero hace la validacion si existe el precio del producto y luego si esta habilitado y luego si el nuevo precio va a estar habilitado, caso contrario si falla la primera condiciona no continuara a las siguientes
+            if precioDelProducto and precioDelProducto.habilitado and habilitado:
+                # Significa que ya hay un precio habilitado y queremos poner un nuevo precio tambien habilitado, entonces tenemos que deshabilitar el antiguo
+                precioDelProducto.habilitado = False
+                precioDelProducto.save()
+            # Si alguno de los precios no esta habilitado o ninguno lo esta igual proceder con el guardado de la informacion
+            serializador.save()
+
+            return Response(data={
+                "message":"Precio creado exitosamente",
+                "content": serializador.data
+            }, status=status.HTTP_201_CREATED)
+
+        else:
+            return Response(data={
+                "message":"Error al crear el precio",
+                "content":serializador.errors
+            }, status = status.HTTP_400_BAD_REQUEST)
+
+

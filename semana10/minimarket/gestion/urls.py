@@ -4,7 +4,8 @@ from .views import (CategoriasView,
                     ProductosView,
                     ProductoView, 
                     crearUrlParaSubirArchivo,
-                    crearMedia)
+                    crearMedia,
+                    PreciosView)
 
 urlpatterns = [
     # as_view convierte la vista creada con DRF a una vista que la pueda entender Django y pueda servirla
@@ -21,5 +22,6 @@ urlpatterns = [
         "delete":"destroy"
     })),
     path('generar-url',crearUrlParaSubirArchivo),
-    path('media',crearMedia)
+    path('media',crearMedia),
+    path('precios', PreciosView.as_view())
 ]
