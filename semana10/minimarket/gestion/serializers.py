@@ -17,9 +17,18 @@ class CategoriaSerializer(ModelSerializer):
         exclude = ["eliminado"]
 
 class ProductoSerializer(ModelSerializer):
+    # El parametro read_only indica que este atributo solo sera mostrado mas no se podra enviar informacion hacia el ni entrara en juego cuando se haga la validacion
+    url = serializers.CharField(read_only=True)
+    # El parametro write_only indica que este atributo es solo lectura y solo se usara cuando el cliente mande infomacion para crear o editar y nunca se mostrara
+    # mediaid = serializers.CharField(write_only=True)
     class Meta:
         model = Producto
         exclude = ["eliminado"]
+        # Si se quiere modificar una instancia de una fk para que solo sea o solo lectura o solo escritura 
+        # https://www.django-rest-framework.org/api-guide/serializers/#additional-keyword-arguments
+        extra_kwargs = {
+            "media": {"write_only": True}
+        }
 
 class ProductoDetalleSerializer(ModelSerializer):
     class Meta:
