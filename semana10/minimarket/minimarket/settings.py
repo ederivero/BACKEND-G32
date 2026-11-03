@@ -42,10 +42,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "gestion",
     # ahora podemos usar la intefaz grafica de DRF en nuestro proyecto
-    "rest_framework"
+    "rest_framework",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -53,6 +55,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+# Esta propiedad servira para poder agregar quienes pueden consultar a mi API y no tiene que terminar con un / slash
+CORS_ALLOWED_ORIGINS = [    
+    "http://127.0.0.1:5500",
 ]
 
 ROOT_URLCONF = "minimarket.urls"
