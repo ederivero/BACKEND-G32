@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.request import Request
 
-# Create your views here.
+class UsuariosView(APIView):
+    def post(self, request: Request):
+        pass
+
+    def get(self, request: Request):
+        pass

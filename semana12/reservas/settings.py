@@ -134,3 +134,7 @@ MAILERS = {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
 }
+
+
+# indica a django cual sera la nueva tabla que se usara como referencia para reemplazar el auth_user
+AUTH_USER_MODEL = 'gestion.Usuario'
