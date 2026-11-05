@@ -11,8 +11,8 @@ from rest_framework.permissions import (
                                         )
 
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-from .serializers import UsuarioSerializer, LoginSerializar
-from .models import Usuario
+from .serializers import UsuarioSerializer, LoginSerializer, DoctorSerializer, PacienteSerializer
+from .models import Usuario, Paciente, Doctor
 
 @api_view(http_method_names=['POST'])
 def registroUsuario(request: Request):
@@ -43,7 +43,7 @@ def registroUsuario(request: Request):
 
 @api_view(http_method_names=['POST'])
 def loginManual(request:Request):
-    serializador = LoginSerializar(data=request.data)
+    serializador = LoginSerializer(data=request.data)
 
     if serializador.is_valid():
         correo = serializador.validated_data.get('correo')
@@ -85,9 +85,74 @@ def perfilUsuario(request: Request):
     print(request.user) # retorna la instacia que le pertenece al usuario
 
     usuarioActual = request.user
-    
+    serializador = UsuarioSerializer(instance= usuarioActual)
     return Response(data={
-        "content":""
+        "content":serializador.data
     })
 
 
+@api_view(http_method_names=['POST'])
+@permission_classes([IsAuthenticated])
+def configurarDoctor(request:Request):
+    # la info del usuario viene en request.user
+    # 1. validar si el usuario existe
+    usuarioExiste = Usuario.objects.filter(id = request.user.id).first()
+    if not usuarioExiste:
+        return Response(data={
+            "message":"El usuario no existe"
+        }, status=status.HTTP_404_NOT_FOUND)
+    # 2. un usuario no puede ser doctor y paciente entonces validar que este usuario no sea paciente, si lo es no se debe continuar
+    pacienteUsuario = Paciente.objects.filter(usuario = usuarioExiste.id).first()
+    if pacienteUsuario :
+        return Response(data={
+            "message":"El usuario ya es un paciente"
+        }, status=status.HTTP_400_BAD_REQUEST)
+    # 3. guardar la informacion del doctor
+    #  
+    # Agregamos el id del usuario proveniente del JWT a el id del usuario que usara el doctor en el registro
+    request.data['usuario']= usuarioExiste.id
+    serializador = DoctorSerializer(data = request.data)
+    if serializador.is_valid():
+        serializador.save()
+        return Response(data={
+            "message":"Doctor creado exitosamente",
+            "content": serializador.data
+        }, status=status.HTTP_201_CREATED)
+    else:
+        return Response(data={
+            "message":"Error al crear el registro",
+            "content":serializador.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(http_method_names=['POST'])
+@permission_classes([IsAuthenticated])
+def configurarPaciente(request:Request):
+    # 1. validar si el usuario existe
+    usuarioExiste = Usuario.objects.filter(id = request.user.id).first()
+    if not usuarioExiste:
+        return Response(data={
+            "message":"El usuario no existe"
+        }, status=status.HTTP_404_NOT_FOUND)
+    # 2. un usuario no puede ser doctor y paciente entonces validar que este usuario no sea paciente, si lo es no se debe continuar
+    doctorUsuario = Doctor.objects.filter(usuario = usuarioExiste.id).first()
+    if doctorUsuario :
+        return Response(data={
+            "message":"El usuario ya es un doctor"
+        }, status=status.HTTP_400_BAD_REQUEST)
+    # 3. guardar la informacion del paciente
+    #  
+    # Agregamos el id del usuario proveniente del JWT a el id del usuario que usara el doctor en el registro
+    request.data['usuario']= usuarioExiste.id
+    serializador = PacienteSerializer(data = request.data)
+    if serializador.is_valid():
+        serializador.save()
+        return Response(data={
+            "message":"Paciente creado exitosamente",
+            "content": serializador.data
+        }, status=status.HTTP_201_CREATED)
+    else:
+        return Response(data={
+            "message":"Error al crear el registro",
+            "content":serializador.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
