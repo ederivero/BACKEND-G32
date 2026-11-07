@@ -11,8 +11,9 @@ from rest_framework.permissions import (
                                         )
 
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-from .serializers import UsuarioSerializer, LoginSerializer, DoctorSerializer, PacienteSerializer
-from .models import Usuario, Paciente, Doctor
+from .serializers import UsuarioSerializer, LoginSerializer, DoctorSerializer, PacienteSerializer, EspecialidadSerializer
+from .models import Usuario, Paciente, Doctor, Especialidad
+from .pagination import PaginacionEstandar
 
 @api_view(http_method_names=['POST'])
 def registroUsuario(request: Request):
@@ -156,3 +157,53 @@ def configurarPaciente(request:Request):
             "message":"Error al crear el registro",
             "content":serializador.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+from django.db import connection, reset_queries
+
+class EspecialidadesView(APIView):
+    def get(self, request: Request):
+        # Reinicia toda la cola de consultas que se ha realizado para evitar que en el for se puedan mostrar consultas pasadas y confunda la data
+        reset_queries()
+
+        nombre = request.query_params.get('nombre')
+        print(nombre)
+        # Django no obtiene de manera automatica los registros, porque el queryset es PEREZOSO, Django solamente obtiene la informacion de la base de datos hasta usar los datos
+        especialidades = Especialidad.objects.all()
+
+        if nombre:
+            # ILIKE 
+            # al momento de agregar un filtro adicional a una query previamente definida tenemos que sobreescribir la intancia previa para que surga efecto, porque si solamente le agregamos el filtro entonces no se agregara a la instancia previa
+            especialidades = especialidades.filter(nombre__icontains = nombre.strip())
+
+        paginador = PaginacionEstandar()
+        # le pasamos la informacion que va a utilizar para poder obtener los registros de la bd, asi mismo le pasamos el request en cual contendra los query_params para poder hacer la paginacion y le pasamos la vista en el caso que estemos usando templates para que esta pueda ser renderizada sin problema, en nuestro caso no es necesario esa informacion
+        resultado = paginador.paginate_queryset(especialidades,request, view=self)
+        serializador = EspecialidadSerializer(instance = resultado, many=True)
+
+        print(resultado)
+        # convertira la informacion proveida de la consulta a la bd y la serializara de manera correcta antes de poder retornarla al cliente
+        respuesta = paginador.get_paginated_response(serializador.data)
+
+        # For para debug en el cual solo se usa cuando queremos validar cuantas y que consultas se estan realizando en la bd en determinado endpoint
+        for consulta in connection.queries:
+            # Imprime todas las consultas que sealizan en la bd
+            print(consulta["sql"])
+        return respuesta
+
+    def post(self, request:Request):
+        # Implementar el post
+        # para crear una nueva especialidad
+        serializador = EspecialidadSerializer(data = request.data)
+
+        if serializador.is_valid():
+            serializador.save()
+            return Response(data={
+                "message":"Especialidad creada exitosamente",
+                "content": serializador.data
+            },status=status.HTTP_201_CREATED)
+        else:
+            return Response(data={
+                "message":"Error al crear la especialidad",
+                "content": serializador.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
