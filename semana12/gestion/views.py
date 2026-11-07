@@ -14,6 +14,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from .serializers import UsuarioSerializer, LoginSerializer, DoctorSerializer, PacienteSerializer, EspecialidadSerializer
 from .models import Usuario, Paciente, Doctor, Especialidad
 from .pagination import PaginacionEstandar
+from django.db import connection, reset_queries
+
 
 @api_view(http_method_names=['POST'])
 def registroUsuario(request: Request):
@@ -157,9 +159,6 @@ def configurarPaciente(request:Request):
             "message":"Error al crear el registro",
             "content":serializador.errors
         }, status=status.HTTP_400_BAD_REQUEST)
-
-
-from django.db import connection, reset_queries
 
 class EspecialidadesView(APIView):
     def get(self, request: Request):
