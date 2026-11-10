@@ -5,6 +5,9 @@ docker images                   > muestra todas las imagenes que tengo en mi equ
 docker ps                       > muestra todos los contenedores en ejecucion
 docker ps -a                    > muestra absolutamente todos los contenedores
 docker rm CONTEDOR_ID | NOMBRE  > elimina ese contenedor y toda la data se perdera a no ser que se use un volumen
+docker compose build --no-cache > genera la creacion de contenedores en base al archivo docker-compose y este lee la configuracion del Dockerfile
+
+docker compose run --rm NOMBRE_CONTENEDOR COMANDO > comando para ejectuar algun comando dentro del contenedor seleccionado
 
 en powershell y terminales de macos, linux funciona el comodin $(pwd) mientras que en cmd funciona %cd%
 docker run --rm -v "$(pwd):/app" -w /app python:3.16.0a1-alpine3.24 python prueba_docker.py
