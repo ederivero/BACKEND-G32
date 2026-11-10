@@ -1,0 +1,38 @@
+services:
+  api:
+    build: . # es el comando que sirve para construir este contenedor pero al estar utilizando el Dockerfile el indicamos que la direccion sera este mismo directorio
+    command: python manage.py runserver 0.0.0.0:8000
+    # volumes indicara donde se almacenara la data para que sea persistente
+    volumes:
+      - .:/app
+    # ports indicara que puertos podran ser accedidos desde afuera hacia el contenedor
+    ports:
+      - "8000:8000"
+    # env_file sirve para indicar cual archivo tendra que leer para setear las variables de entorno
+    env_file: .env
+    # depends_on sirve para indicar si antes de que arranque este servicio tenga que esperar a otro para arrancar
+    depends_on:
+      base_de_datos:
+        # service_healthy indica que si el servicio se ha levantado "sanamente" recien se levantara el api
+        condition: service_healthy
+  
+  base_de_datos:
+    # image es por si no vamos usar el Dockerfile y si usaremos una imagen 
+    image: postgres:18
+    env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql
+    ports:
+      # Externamente usaremos el 5433 para conectarnos a nuestro contenedor que expone el puerto 5432
+      - "5433:5432"
+    # es una revision para que el contenedor este funcionando correctamente
+    healthcheck:
+      # usamos un comando de test para corroborar que el servicio de postgres este funcionando correctamente y haremos un total de 10 retries (reintentos) en un intervalo de 5seg cada uno y con un tiempo de espera (timeout) de 3s y si esta bien chevere y si luego de los 10 reintentos no se levantara el contenedor
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+# Si en un docker-compose tenemos algun contenedor que almacene data y esta puede perderse al eliminar el contenedor se recomienda agregar la etiqueta volumes para que , si se elimina el contenedor, esta informacion quede almacenada de manera segura en docker y pueda ser leida posteriormente cuando se vuelva a crear el contenedor
+volumes:
+  pgdata:

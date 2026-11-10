@@ -1,0 +1,15 @@
+docker run IMAGEN:TAG           > descarga la imagen si no existe en nuestra maquina y luego la ejecuta
+docker pull IMAGEN:TAG          > descarga la imagen si no existe
+docker rmi IMAGEN:TAG           > elimina la imagen de nuestro equipo
+docker images                   > muestra todas las imagenes que tengo en mi equipo
+docker ps                       > muestra todos los contenedores en ejecucion
+docker ps -a                    > muestra absolutamente todos los contenedores
+docker rm CONTEDOR_ID | NOMBRE  > elimina ese contenedor y toda la data se perdera a no ser que se use un volumen
+
+en powershell y terminales de macos, linux funciona el comodin $(pwd) mientras que en cmd funciona %cd%
+docker run --rm -v "$(pwd):/app" -w /app python:3.16.0a1-alpine3.24 python prueba_docker.py
+docker run --rm -v "%cd%:/app" -w /app python:3.16.0a1-alpine3.24 python prueba_docker.py
+
+
+
+Dockerfile es un documento que me sirve para poder crear mi contenedor con una imagen como base y agregar mi proyecto
