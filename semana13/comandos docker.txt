@@ -12,6 +12,12 @@ docker compose run --rm NOMBRE_CONTENEDOR COMANDO > comando para ejectuar algun 
 en powershell y terminales de macos, linux funciona el comodin $(pwd) mientras que en cmd funciona %cd%
 docker run --rm -v "$(pwd):/app" -w /app python:3.16.0a1-alpine3.24 python prueba_docker.py
 docker run --rm -v "%cd%:/app" -w /app python:3.16.0a1-alpine3.24 python prueba_docker.py
+docker run --name redis-prueba -p 6379:6379 redis > Levantara nuestro servidor de redis usando docker 
+
+docker start NOMBRE_CONTENEDOR              > inicializo los contenedores que tengo creados pero que estan en hibernacion
+docker stop NOMBRE_CONTENEDOR               > detengo el contenedor que esta levantado
+docker exec -it NOMBRE_CONTENEDOR COMANDO   > ejecuto el comando en el contenedor, el contenedor debe estar levantado (start)
+
 
 
 

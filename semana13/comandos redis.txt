@@ -1,0 +1,26 @@
+PING        > muestra el estado de la bd, si retorna PONG esta bien
+SET clave valor     > Guarda un valor en la bd 
+GET clave           > retorna el valor de esa clave, en el caso que no exista un valor para esa llave retornara (nil)
+EXISTS clave        > retornara 1 si existe la clave y 0 si no existe
+DEL clave           > eliminas la clave y su valor
+SCAN 0 MATCH patron > realiza la busqueda claves por patron, no se recomienda usar KEYS * cuando tenemos demasiados datos (servidor real) porque bloquea Redis mientras recorre todas las claves
+FLUSHALL            > elimina todas las claves del servidor
+
+En redis se suele guardar la informacion mediante una convencion
+entidad:id:dato
+reserva:medico10:11hr
+reserva:medico10
+
+- Usar siempre el mismo patron en todo el proyecto
+- Escribir en minusculas
+- No usar espacios, usa dos puntos o guion bajo
+- usar nombres cortos y legibles
+- incluir el identificador dentro de la clave
+
+SET codigo:1234:nombre eduardo
+
+SET codigo:1234:apellido de_rivero
+
+SET codigo:1234:email ederiveroman@gmail.com
+
+https://redis.io/docs/latest/develop/data-types
